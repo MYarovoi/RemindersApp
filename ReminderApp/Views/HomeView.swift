@@ -9,11 +9,16 @@ import SwiftUI
 import CoreData
 
 struct HomeView: View {
+    @FetchRequest(sortDescriptors: [])
+    private var myListResults: FetchedResults<MyList>
+    
     @State private var isPresented: Bool = false
     
     var body: some View {
         NavigationStack {
             VStack {
+                MyListsView(myLists: myListResults)
+                                
                 Button {
                     isPresented = true
                 } label: {
@@ -24,7 +29,11 @@ struct HomeView: View {
             }.sheet(isPresented: $isPresented) {
                 NavigationStack {
                     AddNewListView { name, color in
-                        
+                        do {
+                            try ReminderServis.saveMyList(name, color)
+                        } catch {
+                            print("DEBUG: \(error.localizedDescription)")
+                        }
                     }
                 }
             }
@@ -36,5 +45,6 @@ struct HomeView: View {
     
     #Preview {
         HomeView()
+            .environment(\.managedObjectContext, CoreDataProvider.shared.persistentContainer.viewContext)
     }
 
