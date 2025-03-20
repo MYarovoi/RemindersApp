@@ -19,8 +19,23 @@ extension MyList {
 
     @NSManaged public var name: String
     @NSManaged public var color: UIColor
+    @NSManaged public var reminders: NSSet?
 }
 
 extension MyList : Identifiable {
 
+}
+
+extension MyList {
+    @objc(addRemindersObject:)
+    @NSManaged public func addToReminders(_ value: Reminder)
+    
+    @objc(removeRemindersObject:)
+    @NSManaged public func removeFromReminders(_ value: Reminder)
+    
+    @objc(addReminders:)
+    @NSManaged public func addToReminders(_ value: NSSet)
+    
+    @objc(removeReminders:)
+    @NSManaged public func removeFromReminders(_ value: NSSet)
 }
