@@ -31,6 +31,16 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
+		1A1502D92D8D6FF8000505B1 /* Extensions */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1A1502E12D8DA084000505B1 /* Utils */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		BF8C391D2D8C0DAE00CA1BA6 /* Services */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Services;
@@ -52,6 +62,8 @@
 		1A1502782D8B045B000505B1 = {
 			isa = PBXGroup;
 			children = (
+				1A1502E12D8DA084000505B1 /* Utils */,
+				1A1502D92D8D6FF8000505B1 /* Extensions */,
 				BF8C391D2D8C0DAE00CA1BA6 /* Services */,
 				1A15029D2D8B0ED1000505B1 /* Views */,
 				1A15029C2D8B0947000505B1 /* CoreData */,
@@ -89,6 +101,8 @@
 				1A15029B2D8B066C000505B1 /* Models */,
 				1A15029C2D8B0947000505B1 /* CoreData */,
 				1A15029D2D8B0ED1000505B1 /* Views */,
+				1A1502D92D8D6FF8000505B1 /* Extensions */,
+				1A1502E12D8DA084000505B1 /* Utils */,
 				BF8C391D2D8C0DAE00CA1BA6 /* Services */,
 			);
 			name = ReminderApp;
