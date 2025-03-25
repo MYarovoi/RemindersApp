@@ -11,6 +11,9 @@ struct ReminderDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Binding var reminder: Reminder
     @State var editConfig = ReminderEditConfig()
+    private var isValid: Bool {
+        !editConfig.title.isEmpty
+    }
     
     var body: some View {
         NavigationStack {
@@ -51,9 +54,18 @@ struct ReminderDetailView: View {
                                 }
                             }
 
+                        }.onChange(of: editConfig.hasDate) { hasDate in
+                            if hasDate {
+                                editConfig.reminderDate = Date()
+                            }
+                        }
+                        .onChange(of: editConfig.hasTime) { hasTime in
+                            if hasTime {
+                                editConfig.reminderTime = Date()
+                            }
                         }
                     }
-                }
+                }.listStyle(.insetGrouped)
             }.onAppear {
                 editConfig = ReminderEditConfig(reminder: reminder)
             }
@@ -70,8 +82,13 @@ struct ReminderDetailView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") {
-                        
-                    }
+                            do {
+                                let _ = try ReminderServis.updateReminder(reminder: reminder, editConfig: editConfig)
+                            } catch {
+                                print("DEBUG: Fail to update reminder \(error.localizedDescription)")
+                            }
+                        dismiss()
+                    }.disabled(!isValid)
                 }
             }
         }

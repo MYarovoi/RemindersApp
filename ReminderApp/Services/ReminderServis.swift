@@ -25,6 +25,22 @@ class ReminderServis {
         try save()
     }
     
+    static func updateReminder(reminder: Reminder, editConfig: ReminderEditConfig) throws -> Bool {
+        let reminderToUpdate = reminder
+        reminderToUpdate.isCompleated = editConfig.isCompleated
+        reminder.title = editConfig.title
+        reminder.notes = editConfig.notes
+        reminderToUpdate.reminderDate = editConfig.hasDate ? editConfig.reminderDate : nil
+        reminderToUpdate.reminderTime = editConfig.hasTime ? editConfig.reminderTime : nil
+        try save()
+        return true
+    }
+    
+    static func deleteReminder(reminder: Reminder) throws {
+        viewContext.delete(reminder)
+        try save()
+    }
+    
     static func saveReminderToMyList(myList: MyList, reminderTitle: String) throws {
         let reminder = Reminder(context: viewContext)
         reminder.title = reminderTitle
@@ -36,6 +52,32 @@ class ReminderServis {
         let request = Reminder.fetchRequest()
         request.sortDescriptors = []
         request.predicate = NSPredicate(format: "list = %@ AND isCompleated = false", myList)
+        return request
+    }
+    
+    static func getReminderBySearchTerm(_ search: String) -> NSFetchRequest<Reminder> {
+        let request = Reminder.fetchRequest()
+        request.sortDescriptors = []
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", search)
+        return request
+    }
+    
+    static func remindersByStatType(_ statType: ReminderStatType) -> NSFetchRequest<Reminder> {
+        let request = Reminder.fetchRequest()
+        request.sortDescriptors = []
+        switch statType {
+        case .scheduled:
+            request.predicate = NSPredicate(format: "reminderDate != nil OR reminderTime != nil AND isCompleated = false")
+        case .completed:
+            request.predicate = NSPredicate(format: "isCompleated = true")
+        case .all:
+            request.predicate = NSPredicate(format: "isCompleated = false")
+        case .today:
+            let today = Date()
+            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today)!
+            request.predicate = NSPredicate(format: "(reminderDate BETWEEN {%@, %@}) OR (reminderTime BETWEEN {%@, %@})", today as NSDate, tomorrow as NSDate)
+        }
+        
         return request
     }
 }
